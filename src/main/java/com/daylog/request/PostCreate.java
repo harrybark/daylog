@@ -3,11 +3,15 @@ package com.daylog.request;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 @Data
 @ToString
 public class PostCreate {
 
-    public String title;
-    public String contents;
+    @NotEmpty
+    private String title;
+    private String contents;
 
 }

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(PostController.class)
 class PostControllerTest {
 
     @Autowired
@@ -35,6 +35,24 @@ class PostControllerTest {
                 )
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("Hello World"))
+                .andDo(print())
+        ;
+    }
+
+    @Test
+    @DisplayName("/posts 요청시 Title 값은 필수 인지 확인한다.")
+    public void post_test_valid() throws Exception {
+        // given
+        String json = "{\"title\":\"\", \"contents\":\"\"}";
+
+        // when
+
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                )
+                .andExpect(status().isBadRequest())
                 .andDo(print())
         ;
     }
