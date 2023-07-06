@@ -10,8 +10,10 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 public class PostCreate {
 
-    @NotEmpty
+    @NotBlank
     private String title;
+
+    @NotBlank
     private String contents;
 
 }
