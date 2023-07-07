@@ -17,10 +17,8 @@ import javax.validation.Valid;
 public class PostController {
 
     @PostMapping("/posts")
-    public ResponseEntity<?> post(@RequestBody @Valid PostCreate postCreate
+    public ResponseEntity<?> post(@Valid @RequestBody PostCreate postCreate
                                 , BindingResult bindingResult) {
-        log.info("PostCreate = {}", postCreate);
-
         return new ResponseEntity<>(new CMRespDto<>(1, "success", null), HttpStatus.CREATED);
     }
 

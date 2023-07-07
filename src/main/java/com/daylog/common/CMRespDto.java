@@ -1,14 +1,16 @@
 package com.daylog.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@AllArgsConstructor
+import java.util.HashMap;
+import java.util.Map;
+
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@Getter
 public class CMRespDto<T> {
     private long code; // 1 : success , 0 fail
     private String message;
     private T data;
+
 }

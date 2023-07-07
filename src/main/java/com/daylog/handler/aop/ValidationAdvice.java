@@ -34,5 +34,4 @@ public class ValidationAdvice {
 
         return proceedingJoinPoint.proceed();
     }
-
 }
