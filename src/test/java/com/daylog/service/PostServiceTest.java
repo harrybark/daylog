@@ -1,6 +1,7 @@
 package com.daylog.service;
 
 import com.daylog.domain.Post;
+import com.daylog.postResponse.PostResponse;
 import com.daylog.repository.PostRepository;
 import com.daylog.request.PostCreate;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,9 +54,9 @@ class PostServiceTest {
 
         // when
         Long postId = postService.write(postCreate);
-        Post post = postService.get(postId);
+        PostResponse postResponse = postService.get(postId);
 
         // then
-        assertEquals(postId, post.getId());
+        assertEquals(postId, postResponse.getId());
     }
 }

@@ -2,6 +2,7 @@ package com.daylog.controller;
 
 import com.daylog.common.CMRespDto;
 import com.daylog.domain.Post;
+import com.daylog.postResponse.PostResponse;
 import com.daylog.request.PostCreate;
 import com.daylog.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class PostController {
      */
     @GetMapping("/posts/{postId}")
     public ResponseEntity<?> get(@PathVariable("postId") Long id) {
-        Post post = postService.get(id);
-        return new ResponseEntity<>(new CMRespDto<>(1, "success", post), HttpStatus.OK);
+        PostResponse postResponse = postService.get(id);
+        return new ResponseEntity<>(new CMRespDto<>(1, "success", postResponse), HttpStatus.OK);
     }
 }

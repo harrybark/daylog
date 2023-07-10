@@ -2,6 +2,7 @@ package com.daylog.service;
 
 import com.daylog.domain.Post;
 import com.daylog.handler.ex.CustomValidationApiException;
+import com.daylog.postResponse.PostResponse;
 import com.daylog.repository.PostRepository;
 import com.daylog.request.PostCreate;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,14 @@ public class PostService {
         return post.getId();
     }
 
-    public Post get(Long id) {
-        return postRepository.findById(id).orElseThrow(() -> new CustomValidationApiException("Not Found post"));
+    public PostResponse get(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new CustomValidationApiException("Not Found post"));
+        PostResponse postResponse = PostResponse.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .contents(post.getContents())
+                .build();
+
+        return postResponse;
     }
 }
