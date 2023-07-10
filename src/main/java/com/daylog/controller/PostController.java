@@ -1,6 +1,7 @@
 package com.daylog.controller;
 
 import com.daylog.common.CMRespDto;
+import com.daylog.domain.Post;
 import com.daylog.request.PostCreate;
 import com.daylog.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -28,4 +27,13 @@ public class PostController {
         return new ResponseEntity<>(new CMRespDto<>(1, "success", null), HttpStatus.CREATED);
     }
 
+    /**
+     * /posts -> findAll(검색 + 페이징)
+     * /posts/{postId} -> 글 1개만 조회
+     */
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<?> get(@PathVariable("postId") Long id) {
+        Post post = postService.get(id);
+        return new ResponseEntity<>(new CMRespDto<>(1, "success", post), HttpStatus.OK);
+    }
 }

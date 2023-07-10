@@ -1,5 +1,6 @@
 package com.daylog.controller;
 
+import com.daylog.domain.Post;
 import com.daylog.handler.ControllerExceptionHandler;
 import com.daylog.handler.aop.ValidationAdvice;
 import com.daylog.repository.PostRepository;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -23,6 +25,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -121,5 +125,30 @@ class PostControllerTest {
 
         // then
         assertEquals(1L, postRepository.count());
+    }
+
+    @Test
+    @DisplayName(value = "글 단건을 조회한다")
+    public void 글_단건_조회() throws Exception {
+        // given
+        String title = "Harry Potter2";
+        String contents = "Prologue";
+        Post postCreate = Post.builder()
+                .title(title)
+                .contents(contents)
+                .build();
+
+        postRepository.save(postCreate);
+
+        mockMvc.perform(get("/posts/{postId}", postCreate.getId())
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.id").value(postCreate.getId()))
+                .andExpect(jsonPath("$.data.title").value(title))
+                .andExpect(jsonPath("$.data.contents").value(contents))
+                .andDo(print());
+
+        // then
+
     }
 }

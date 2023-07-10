@@ -1,14 +1,12 @@
 package com.daylog.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Getter
 public class Post {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
