@@ -151,4 +151,35 @@ class PostControllerTest {
         // then
 
     }
+
+    @Test
+    @DisplayName(value = "게시글 모두를 조회한다.")
+    public void 게시글_다건_조회() throws Exception {
+        // given
+        String title = "Harry Potter";
+        String contents = "Prologue";
+        Post postCreate = Post.builder()
+                .title(title)
+                .contents(contents)
+                .build();
+
+        postRepository.save(postCreate);
+
+        String title2 = "Harry Potter2";
+        String contents2 = "Prologue";
+        Post postCreate2 = Post.builder()
+                .title(title2)
+                .contents(contents2)
+                .build();
+
+        postRepository.save(postCreate2);
+
+        mockMvc.perform(get("/posts")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        // then
+
+    }
 }
