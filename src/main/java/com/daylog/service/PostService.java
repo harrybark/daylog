@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -44,7 +46,7 @@ public class PostService {
                 return postResponse;
         }
 
-        public Page<PostResponse> getAll(Pageable pageable) {
-                return new PageImpl<>(postRepository.findAll(pageable).stream().map(PostResponse::new).collect(Collectors.toList()));
+        public Page<PostResponse> getList(Pageable pageable) {
+                return new PageImpl<>(postRepository.findAll(pageable).stream().map(PostResponse::new).collect(Collectors.toList()), pageable, postRepository.count());
         }
 }

@@ -24,6 +24,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -156,25 +160,17 @@ class PostControllerTest {
     @DisplayName(value = "게시글 모두를 조회한다.")
     public void 게시글_다건_조회() throws Exception {
         // given
-        String title = "Harry Potter";
-        String contents = "Prologue";
-        Post postCreate = Post.builder()
-                .title(title)
-                .contents(contents)
-                .build();
+        List<Post> requestPosts = IntStream.range(1, 31)
+                .mapToObj(i ->
+                        Post.builder()
+                                .title("Harry Potter " + i)
+                                .contents("Contents " + i)
+                                .build()
+                ).collect(Collectors.toList());
 
-        postRepository.save(postCreate);
+        postRepository.saveAll(requestPosts);
 
-        String title2 = "Harry Potter2";
-        String contents2 = "Prologue";
-        Post postCreate2 = Post.builder()
-                .title(title2)
-                .contents(contents2)
-                .build();
-
-        postRepository.save(postCreate2);
-
-        mockMvc.perform(get("/posts")
+        mockMvc.perform(get("/posts?page=1&size=10&sort=id,desc")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());

@@ -1,5 +1,6 @@
 package com.daylog.service;
 
+import com.daylog.domain.Post;
 import com.daylog.postResponse.PostResponse;
 import com.daylog.repository.PostRepository;
 import com.daylog.request.PostCreate;
@@ -9,9 +10,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.data.domain.PageRequest.of;
+import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.springframework.data.domain.Sort.by;
 
 @SpringBootTest
 class PostServiceTest {
@@ -65,24 +74,22 @@ class PostServiceTest {
     @DisplayName(value = "게시글 모두를 조회한다.")
     public void 게시글_다건_조회() throws Exception {
         // given
-        PostCreate postCreate = PostCreate.builder()
-                .title("Harry Potter")
-                .contents("prologue")
-                .build();
+        List<Post> requestPosts = IntStream.range(1, 31)
+                .mapToObj(i ->
+                    Post.builder()
+                            .title("Harry Potter " + i)
+                            .contents("Contents + " + i)
+                            .build()
+                ).collect(Collectors.toList());
 
-        PostCreate postCreate2 = PostCreate.builder()
-                .title("Harry Potter 2")
-                .contents("prologue")
-                .build();
 
         // when
-        postService.write(postCreate);
-        postService.write(postCreate2);
+        postRepository.saveAll(requestPosts);
 
-        Pageable pageable = Pageable.unpaged();
-        Page<PostResponse> postResponse = postService.getAll(pageable);
+        PageRequest pageRequest = of(0, 10, by(DESC, "id"));
+        Page<PostResponse> postResponse = postService.getList(pageRequest);
 
         // then
-        assertEquals(postResponse.getSize(), 2);
+        assertEquals(10, postResponse.getSize());
     }
 }

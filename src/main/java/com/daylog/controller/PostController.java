@@ -1,7 +1,6 @@
 package com.daylog.controller;
 
 import com.daylog.common.CMRespDto;
-import com.daylog.domain.Post;
 import com.daylog.postResponse.PostResponse;
 import com.daylog.request.PostCreate;
 import com.daylog.service.PostService;
@@ -9,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -42,8 +42,8 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity<?> get(Pageable pageable) {
-        Page<PostResponse> posts = postService.getAll(pageable);
+        Page<PostResponse> posts = postService.getList(pageable);
 
-        return new ResponseEntity<>(new CMRespDto<>(1, "success", posts.getContent()), HttpStatus.OK);
+        return new ResponseEntity<>(new CMRespDto<>(1, "success", posts), HttpStatus.OK);
     }
 }
