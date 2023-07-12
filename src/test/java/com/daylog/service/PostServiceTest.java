@@ -1,9 +1,11 @@
 package com.daylog.service;
 
 import com.daylog.domain.Post;
+import com.daylog.handler.ex.CustomValidationApiException;
 import com.daylog.postResponse.PostResponse;
 import com.daylog.repository.PostRepository;
 import com.daylog.request.PostCreate;
+import com.daylog.request.PostEdit;
 import com.daylog.request.PostSearch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -119,5 +121,30 @@ class PostServiceTest {
         // then
         assertEquals(10, postResponse.size());
         assertEquals("Harry Potter 19", postResponse.get(0).getTitle());
+    }
+
+    @Test
+    @DisplayName(value = "게시글 1개를 수정한다.")
+    @Transactional
+    public void 게시글_단건_수정() throws Exception {
+        // given
+        PostCreate postCreate = PostCreate.builder()
+                .title("Harry Potter")
+                .contents("prologue")
+                .build();
+
+        // when
+        Long postId = postService.write(postCreate);
+        PostEdit postEdit = PostEdit.builder()
+                .title("Harry Potter2")
+                .contents("J.K Rolling")
+                .build();
+
+        postService.edit(postId, postEdit);
+
+        // then
+        Post post = postRepository.findById(postId).orElseThrow(() -> new CustomValidationApiException("Not Found post"));
+        assertEquals("Harry Potter2", post.getTitle());
+
     }
 }

@@ -3,6 +3,7 @@ package com.daylog.controller;
 import com.daylog.common.CMRespDto;
 import com.daylog.postResponse.PostResponse;
 import com.daylog.request.PostCreate;
+import com.daylog.request.PostEdit;
 import com.daylog.request.PostSearch;
 import com.daylog.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,11 @@ public class PostController {
         return new ResponseEntity<>(new CMRespDto<>(1, "success", postResponse), HttpStatus.OK);
     }
 
+    @PatchMapping("/posts/{postId}")
+    public ResponseEntity<?> update(@PathVariable("postId") Long id, @Valid @RequestBody PostEdit postEdit) {
+        PostResponse postResponse = postService.edit(id, postEdit);
+        return new ResponseEntity<>(new CMRespDto<>(1, "success", postResponse), HttpStatus.OK);
+    }
 
     @GetMapping("/posts-all")
     public ResponseEntity<?> get(Pageable pageable) {

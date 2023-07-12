@@ -1,10 +1,12 @@
 package com.daylog.service;
 
 import com.daylog.domain.Post;
+import com.daylog.domain.PostEditor;
 import com.daylog.handler.ex.CustomValidationApiException;
 import com.daylog.postResponse.PostResponse;
 import com.daylog.repository.PostRepository;
 import com.daylog.request.PostCreate;
+import com.daylog.request.PostEdit;
 import com.daylog.request.PostSearch;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,5 +56,19 @@ public class PostService {
 
         public List<PostResponse> getListAll(PostSearch postSearch) {
                 return postRepository.getList(postSearch).stream().map(PostResponse::new).collect(Collectors.toList());
+        }
+
+        public PostResponse edit(Long id, PostEdit postEdit) {
+                Post post = postRepository.findById(id).orElseThrow(() -> new CustomValidationApiException("Not Found post"));
+
+                PostEditor.PostEditorBuilder postEditorBuilder = post.toEditor();
+                PostEditor postEditor = postEditorBuilder
+                        .title(postEdit.getTitle())
+                        .contents(postEdit.getContents())
+                        .build();
+
+                post.edit(postEditor);
+
+                return new PostResponse(post);
         }
 }

@@ -1,12 +1,11 @@
 package com.daylog.controller;
 
 import com.daylog.domain.Post;
-import com.daylog.handler.ControllerExceptionHandler;
 import com.daylog.handler.aop.ValidationAdvice;
 import com.daylog.repository.PostRepository;
 import com.daylog.request.PostCreate;
+import com.daylog.request.PostEdit;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,11 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -31,6 +27,7 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -220,6 +217,39 @@ class PostControllerTest {
         mockMvc.perform(get("/posts?page=0&size=10")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andDo(print());
+
+        // then
+
+    }
+
+    @Test
+    @DisplayName(value = "글 단건을 수정한다")
+    public void 글_단건_수정() throws Exception {
+        // given
+        String title = "Harry Potter";
+        String contents = "Prologue";
+        Post postCreate = Post.builder()
+                .title(title)
+                .contents(contents)
+                .build();
+
+        postRepository.save(postCreate);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("Harry Potter2")
+                .contents("J.K Rolling")
+                .build();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        mockMvc.perform(patch("/posts/{postId}", postCreate.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postEdit))
+                )
+                .andExpect(status().isOk())
+                //.andExpect(jsonPath("$.data.id").value(postCreate.getId()))
+                .andExpect(jsonPath("$.data.title").value("Harry Potter2"))
+                .andExpect(jsonPath("$.data.contents").value("J.K Rolling"))
                 .andDo(print());
 
         // then

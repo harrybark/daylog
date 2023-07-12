@@ -23,4 +23,16 @@ public class Post {
         this.contents = contents;
     }
 
+    public PostEditor.PostEditorBuilder toEditor() {
+        return PostEditor.builder()
+                .title(title)
+                .contents(contents)
+                ;
+    }
+
+    public void edit(PostEditor postEditor) {
+        title = postEditor.getTitle();
+        contents = postEditor.getContents();
+    }
+
 }
