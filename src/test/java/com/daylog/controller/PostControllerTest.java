@@ -170,7 +170,54 @@ class PostControllerTest {
 
         postRepository.saveAll(requestPosts);
 
-        mockMvc.perform(get("/posts?page=1&size=10&sort=id,desc")
+        mockMvc.perform(get("/posts-all?page=1&size=10&sort=id,desc")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        // then
+
+    }
+
+
+    @Test
+    @DisplayName(value = "게시글 모두를 조회한다.(QueryDSL)")
+    public void 게시글_다건_조회_QUERYDSL() throws Exception {
+        // given
+        List<Post> requestPosts = IntStream.range(1, 31)
+                .mapToObj(i ->
+                        Post.builder()
+                                .title("Harry Potter " + i)
+                                .contents("Contents " + i)
+                                .build()
+                ).collect(Collectors.toList());
+
+        postRepository.saveAll(requestPosts);
+
+        mockMvc.perform(get("/posts?page=1&size=10")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        // then
+
+    }
+
+    @Test
+    @DisplayName(value = "페이지를 0으로 불렀을 때, 조회가 성공하는지 확인한다.")
+    public void 게시글_다건_조회_페이지를_0으로조회한다() throws Exception {
+        // given
+        List<Post> requestPosts = IntStream.range(1, 31)
+                .mapToObj(i ->
+                        Post.builder()
+                                .title("Harry Potter " + i)
+                                .contents("Contents " + i)
+                                .build()
+                ).collect(Collectors.toList());
+
+        postRepository.saveAll(requestPosts);
+
+        mockMvc.perform(get("/posts?page=0&size=10")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());

@@ -4,6 +4,7 @@ import com.daylog.domain.Post;
 import com.daylog.postResponse.PostResponse;
 import com.daylog.repository.PostRepository;
 import com.daylog.request.PostCreate;
+import com.daylog.request.PostSearch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -91,5 +92,32 @@ class PostServiceTest {
 
         // then
         assertEquals(10, postResponse.getSize());
+    }
+
+    @Test
+    @DisplayName(value = "게시글 모두를 조회한다.(QueryDSL)")
+    public void 게시글_다건_조회_QUERYDSL() throws Exception {
+        // given
+        List<Post> requestPosts = IntStream.range(0, 20)
+                .mapToObj(i ->
+                        Post.builder()
+                                .title("Harry Potter " + i)
+                                .contents("Contents + " + i)
+                                .build()
+                ).collect(Collectors.toList());
+
+
+        // when
+        postRepository.saveAll(requestPosts);
+
+        PostSearch postSearch = PostSearch
+                .builder()
+                .build();
+
+        List<PostResponse> postResponse = postService.getListAll(postSearch);
+
+        // then
+        assertEquals(10, postResponse.size());
+        assertEquals("Harry Potter 19", postResponse.get(0).getTitle());
     }
 }

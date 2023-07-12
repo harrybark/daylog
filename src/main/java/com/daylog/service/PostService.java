@@ -5,6 +5,7 @@ import com.daylog.handler.ex.CustomValidationApiException;
 import com.daylog.postResponse.PostResponse;
 import com.daylog.repository.PostRepository;
 import com.daylog.request.PostCreate;
+import com.daylog.request.PostSearch;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -48,5 +50,9 @@ public class PostService {
 
         public Page<PostResponse> getList(Pageable pageable) {
                 return new PageImpl<>(postRepository.findAll(pageable).stream().map(PostResponse::new).collect(Collectors.toList()), pageable, postRepository.count());
+        }
+
+        public List<PostResponse> getListAll(PostSearch postSearch) {
+                return postRepository.getList(postSearch).stream().map(PostResponse::new).collect(Collectors.toList());
         }
 }

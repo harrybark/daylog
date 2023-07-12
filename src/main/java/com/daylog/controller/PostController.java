@@ -3,6 +3,7 @@ package com.daylog.controller;
 import com.daylog.common.CMRespDto;
 import com.daylog.postResponse.PostResponse;
 import com.daylog.request.PostCreate;
+import com.daylog.request.PostSearch;
 import com.daylog.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -40,9 +42,17 @@ public class PostController {
         return new ResponseEntity<>(new CMRespDto<>(1, "success", postResponse), HttpStatus.OK);
     }
 
-    @GetMapping("/posts")
+
+    @GetMapping("/posts-all")
     public ResponseEntity<?> get(Pageable pageable) {
         Page<PostResponse> posts = postService.getList(pageable);
+
+        return new ResponseEntity<>(new CMRespDto<>(1, "success", posts), HttpStatus.OK);
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<?> getList(PostSearch postSearch) {
+        List<PostResponse> posts = postService.getListAll(postSearch);
 
         return new ResponseEntity<>(new CMRespDto<>(1, "success", posts), HttpStatus.OK);
     }
