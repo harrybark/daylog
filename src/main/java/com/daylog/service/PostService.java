@@ -71,4 +71,10 @@ public class PostService {
 
                 return new PostResponse(post);
         }
+
+        public void delete(Long postId) {
+                Post post = postRepository.findById(postId).orElseThrow(() -> new CustomValidationApiException("Not Found post"));
+                postRepository.delete(post);
+
+        }
 }

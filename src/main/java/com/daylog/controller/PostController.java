@@ -62,4 +62,10 @@ public class PostController {
 
         return new ResponseEntity<>(new CMRespDto<>(1, "success", posts), HttpStatus.OK);
     }
+
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<?> delete(@PathVariable("postId") Long id) {
+        postService.delete(id);
+        return new ResponseEntity<>(new CMRespDto<>(1, "success", null), HttpStatus.OK);
+    }
 }

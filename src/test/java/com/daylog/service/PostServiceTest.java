@@ -147,4 +147,23 @@ class PostServiceTest {
         assertEquals("Harry Potter2", post.getTitle());
 
     }
+
+    @Test
+    @DisplayName(value = "게시글 삭제")
+    public void 게시글_삭제한다() throws Exception {
+        // given
+        PostCreate postCreate = PostCreate.builder()
+                .title("Harry Potter")
+                .contents("prologue")
+                .build();
+
+        // when
+        Long postId = postService.write(postCreate);
+
+        // when
+        postService.delete(postId);
+        // then
+        assertEquals(0, postRepository.count());
+
+    }
 }
