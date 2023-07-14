@@ -40,7 +40,7 @@ public class PostService {
 
         public PostResponse get(Long id) {
 
-                Post post = postRepository.findById(id).orElseThrow(() -> new CustomValidationApiException("Not Found post"));
+                Post post = postRepository.findById(id).orElseThrow(() -> new CustomValidationApiException("Post Not Found"));
                 PostResponse postResponse = PostResponse.builder()
                         .id(post.getId())
                         .title(post.getTitle())
@@ -59,7 +59,7 @@ public class PostService {
         }
 
         public PostResponse edit(Long id, PostEdit postEdit) {
-                Post post = postRepository.findById(id).orElseThrow(() -> new CustomValidationApiException("Not Found post"));
+                Post post = postRepository.findById(id).orElseThrow(() -> new CustomValidationApiException("Post Not Found"));
 
                 PostEditor.PostEditorBuilder postEditorBuilder = post.toEditor();
                 PostEditor postEditor = postEditorBuilder
@@ -73,7 +73,7 @@ public class PostService {
         }
 
         public void delete(Long postId) {
-                Post post = postRepository.findById(postId).orElseThrow(() -> new CustomValidationApiException("Not Found post"));
+                Post post = postRepository.findById(postId).orElseThrow(() -> new CustomValidationApiException("Post Not Found"));
                 postRepository.delete(post);
 
         }
