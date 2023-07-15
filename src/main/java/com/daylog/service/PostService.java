@@ -2,7 +2,7 @@ package com.daylog.service;
 
 import com.daylog.domain.Post;
 import com.daylog.domain.PostEditor;
-import com.daylog.handler.ex.CustomValidationApiException;
+import com.daylog.handler.ex.CustomPostNotFoundException;
 import com.daylog.postResponse.PostResponse;
 import com.daylog.repository.PostRepository;
 import com.daylog.request.PostCreate;
@@ -12,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +38,7 @@ public class PostService {
 
         public PostResponse get(Long id) {
 
-                Post post = postRepository.findById(id).orElseThrow(() -> new CustomValidationApiException("Post Not Found"));
+                Post post = postRepository.findById(id).orElseThrow(() -> new CustomPostNotFoundException("Post Not Found"));
                 PostResponse postResponse = PostResponse.builder()
                         .id(post.getId())
                         .title(post.getTitle())
@@ -59,7 +57,7 @@ public class PostService {
         }
 
         public PostResponse edit(Long id, PostEdit postEdit) {
-                Post post = postRepository.findById(id).orElseThrow(() -> new CustomValidationApiException("Post Not Found"));
+                Post post = postRepository.findById(id).orElseThrow(() -> new CustomPostNotFoundException("Post Not Found"));
 
                 PostEditor.PostEditorBuilder postEditorBuilder = post.toEditor();
                 PostEditor postEditor = postEditorBuilder
@@ -73,7 +71,7 @@ public class PostService {
         }
 
         public void delete(Long postId) {
-                Post post = postRepository.findById(postId).orElseThrow(() -> new CustomValidationApiException("Post Not Found"));
+                Post post = postRepository.findById(postId).orElseThrow(() -> new CustomPostNotFoundException("Post Not Found"));
                 postRepository.delete(post);
 
         }

@@ -1,6 +1,7 @@
 package com.daylog.handler;
 
 import com.daylog.common.CMRespDto;
+import com.daylog.handler.ex.CustomCommonException;
 import com.daylog.handler.ex.CustomValidationApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,4 +17,11 @@ public class ControllerExceptionHandler {
     public ResponseEntity<CMRespDto<?>> methodNotArgumentValidExceptionHandler(CustomValidationApiException e) {
         return new ResponseEntity<>(new CMRespDto<>(0, e.getMessage(), e.getErrorMap()), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(CustomCommonException.class)
+    public ResponseEntity<CMRespDto<?>> apiException(CustomCommonException e){
+
+        return new ResponseEntity<>(new CMRespDto<>(0, e.getMessage(), e.getErrorMap()), e.statusCode());
+    }
+
 }
