@@ -11,8 +11,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -60,7 +58,7 @@ public class PostControllerDocTest {
         this.mockMvc.perform(get("/posts/{postId}", 1L).accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("index",
+                .andDo(document("post-inquiry",
                             pathParameters(
                                 parameterWithName("postId").description("게시글 ID")
                                     ),
@@ -101,10 +99,10 @@ public class PostControllerDocTest {
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andDo(document("index",
+                .andDo(document("post-create",
                                 requestFields(
                                         fieldWithPath("title").description("게시글 제목"),
-                                        fieldWithPath("contents").description("게시글 내용")
+                                        fieldWithPath("contents").description("게시글 내용").optional()
                                 ),
                                 responseFields(
                                         fieldWithPath("code").description("Result Code"),
