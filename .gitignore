@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+#daylog
+#node
+nodeenv-16
