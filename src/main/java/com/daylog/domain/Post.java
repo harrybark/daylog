@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 public class Post {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private Long id;
 
     private String title;
