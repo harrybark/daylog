@@ -1,5 +1,8 @@
 ### Daylog 
 
+### history 
+- 2023.07.26 Create AWS EC2 Instance
+ 
 <hr/>
 
 ### 엔티티
