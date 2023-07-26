@@ -9,7 +9,8 @@ spring:
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:tcp://localhost/~/daylog
+    #url: jdbc:h2:tcp://localhost/~/daylog
+    url: jdbc:h2:mem:daylog
     username: sa
     password:
 
