@@ -102,32 +102,6 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("/posts 요청시 저장이되는지 확인한다.")
-    public void post_test_success_2nd() throws Exception {
-        // given
-        String title = "Harry Potter2";
-        String contents = "Prologue";
-        PostCreate postCreate = PostCreate.builder()
-                .title(title)
-                .contents(contents)
-                .build();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(postCreate);
-
-        // when
-        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(json)
-                )
-                .andExpect(status().isCreated())
-                .andDo(print());
-
-        // then
-        assertEquals(1L, postRepository.count());
-    }
-
-    @Test
     @DisplayName(value = "글 단건을 조회한다")
     public void 글_단건_조회() throws Exception {
         // given

@@ -27,7 +27,9 @@ public class PostController {
 
     @PostMapping("/posts")
     public ResponseEntity<?> post(@Valid @RequestBody PostCreate postCreate
-                                , BindingResult bindingResult) {
+                                , BindingResult bindingResult
+    ) {
+        postCreate.validate();
         postService.write(postCreate);
         return new ResponseEntity<>(new CMRespDto<>(1, "success", null), HttpStatus.CREATED);
     }
@@ -43,7 +45,8 @@ public class PostController {
     }
 
     @PatchMapping("/posts/{postId}")
-    public ResponseEntity<?> update(@PathVariable("postId") Long id, @Valid @RequestBody PostEdit postEdit) {
+    public ResponseEntity<?> update(@PathVariable("postId") Long id
+                                    , @Valid @RequestBody PostEdit postEdit) {
         PostResponse postResponse = postService.edit(id, postEdit);
         return new ResponseEntity<>(new CMRespDto<>(1, "success", postResponse), HttpStatus.OK);
     }
