@@ -1,6 +1,7 @@
 package com.daylog.controller;
 
 import com.daylog.common.CMRespDto;
+import com.daylog.config.UserSession;
 import com.daylog.postResponse.PostResponse;
 import com.daylog.request.PostCreate;
 import com.daylog.request.PostEdit;
@@ -24,6 +25,12 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+
+    @GetMapping("/foo")
+    public String foo(UserSession userSession) {
+        log.info(">> {}", userSession.name);
+        return "foo";
+    }
 
     @PostMapping("/posts")
     public ResponseEntity<?> post(@Valid @RequestBody PostCreate postCreate

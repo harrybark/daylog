@@ -1,6 +1,6 @@
 package com.daylog.config;
 
-import com.daylog.handler.ex.CustomUnauthorizedException;
+import com.daylog.handler.ex.CustomUnAuthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,9 +16,10 @@ public class AuthInterceptorConfig implements HandlerInterceptor {
         log.info(">> preHandle");
         String accessToken = request.getParameter("accessToken");
         if ( accessToken != null && "daylog".equals(accessToken)) {
+
             return true;
         }
-        throw new CustomUnauthorizedException();
+        throw new CustomUnAuthorizedException();
     }
 
     @Override
