@@ -2,14 +2,14 @@ package com.daylog.handler.ex;
 
 import org.springframework.http.HttpStatus;
 
-public class CustomUnauthorizedException extends CustomCommonException {
+public class CustomUnAuthorizedException extends CustomCommonException {
 
     // 객체를 구분할 때
     private static final long serialVersionUID = 1L;
 
-    private static final String MESSAGE = "Post Not Found";
+    private static final String MESSAGE = "UnAuthorized Request.";
 
-    public CustomUnauthorizedException() {
+    public CustomUnAuthorizedException() {
         super(MESSAGE);
     }
 
