@@ -10,7 +10,7 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     #url: jdbc:h2:tcp://localhost/~/daylog
-    url: jdbc:h2:mem:daylog
+    url: jdbc:h2:mem:daylog;NON_KEYWORDS=USER
     username: sa
     password:
 
@@ -22,6 +22,7 @@ spring:
       #naming:
       #  physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
+    defer-datasource-initialization: true
 
   servlet:
     multipart:

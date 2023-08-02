@@ -11,7 +11,7 @@ public class CustomInvalidRequestException extends CustomCommonException {
     private String fieldName;
     private static final String MESSAGE = "Invalid Request";
 
-    public CustomInvalidRequestException(String message) {
+    public CustomInvalidRequestException() {
         super(MESSAGE);
     }
 

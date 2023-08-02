@@ -1,5 +1,13 @@
 ### 테스트 요청
 
-GET http://localhost:8080/foo
+#GET http://localhost:8080/foo
+#Content-Type: application/json
+#Authorization: asdf
+
+POST http://localhost:8080/auth/login
 Content-Type: application/json
-Authorization: asdf
+
+{
+  "email" : "harypmw1@dev.com",
+  "password" : "124"
+}
