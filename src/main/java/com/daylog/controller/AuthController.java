@@ -1,9 +1,7 @@
 package com.daylog.controller;
 
-import com.daylog.domain.User;
-import com.daylog.handler.ex.CustomInvalidRequestException;
-import com.daylog.repository.UserRepository;
 import com.daylog.request.LoginRequest;
+import com.daylog.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,15 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserRepository userRepository;
+    private final AuthService authService;
 
     @PostMapping("/auth/login")
     public void login(@RequestBody LoginRequest loginRequest) {
         log.info("login {}", loginRequest);
-
-        User user = userRepository.findUserByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword())
-                .orElseThrow(CustomInvalidRequestException::new);
-
-
+        authService.signIn(loginRequest);
     }
 }
