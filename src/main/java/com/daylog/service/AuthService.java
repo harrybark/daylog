@@ -6,13 +6,16 @@ import com.daylog.repository.UserRepository;
 import com.daylog.request.LoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = false)
     public void signIn(LoginRequest loginRequest) {
         User user = userRepository.findUserByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword())
                 .orElseThrow(CustomInvalidRequestException::new);
