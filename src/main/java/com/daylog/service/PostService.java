@@ -3,7 +3,7 @@ package com.daylog.service;
 import com.daylog.domain.Post;
 import com.daylog.domain.PostEditor;
 import com.daylog.handler.ex.CustomPostNotFoundException;
-import com.daylog.postResponse.PostResponse;
+import com.daylog.response.PostResponse;
 import com.daylog.repository.PostRepository;
 import com.daylog.request.PostCreate;
 import com.daylog.request.PostEdit;

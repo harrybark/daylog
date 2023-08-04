@@ -1,9 +1,6 @@
 package com.daylog.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +10,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Getter
 public class User {
 
     @Id
@@ -35,11 +33,12 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
-    public void addSession() {
-        sessions.add(Session.builder()
+    public Session addSession() {
+        Session session = Session.builder()
                 .user(this)
-                .build()
-        );
+                .build();
+        sessions.add(session);
+        return session;
     }
 
     @Builder

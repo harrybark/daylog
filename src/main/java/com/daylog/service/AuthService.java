@@ -1,5 +1,6 @@
 package com.daylog.service;
 
+import com.daylog.domain.Session;
 import com.daylog.domain.User;
 import com.daylog.handler.ex.CustomInvalidRequestException;
 import com.daylog.repository.UserRepository;
@@ -16,11 +17,11 @@ public class AuthService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = false)
-    public void signIn(LoginRequest loginRequest) {
+    public String signIn(LoginRequest loginRequest) {
         User user = userRepository.findUserByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword())
                 .orElseThrow(CustomInvalidRequestException::new);
 
-        user.addSession();
-
+        Session session = user.addSession();
+        return session.getAccessToken();
     }
 }

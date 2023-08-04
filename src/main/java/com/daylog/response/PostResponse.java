@@ -1,4 +1,4 @@
-package com.daylog.postResponse;
+package com.daylog.response;
 
 import com.daylog.domain.Post;
 import lombok.Builder;
