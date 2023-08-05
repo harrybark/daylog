@@ -1,5 +1,6 @@
 package com.daylog.controller;
 
+import com.daylog.domain.Session;
 import com.daylog.domain.User;
 import com.daylog.handler.aop.ValidationAdvice;
 import com.daylog.repository.SessionRepository;
@@ -26,6 +27,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -81,7 +83,7 @@ class AuthControllerTest {
         // when
 
         // then
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+        mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                 )
@@ -115,7 +117,7 @@ class AuthControllerTest {
         // when
 
         // then
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+        mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                 )
@@ -152,7 +154,7 @@ class AuthControllerTest {
         // when
 
         // then
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+        mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                 )
@@ -163,5 +165,77 @@ class AuthControllerTest {
         User findUser = userRepository.findById(savedUser.getId()).orElseThrow(RuntimeException::new);
 
         assertEquals(1, findUser.getSessions().size());
+    }
+
+    @Test
+    @DisplayName("로그인 후 권한이 필요한 페이지에 접속되는지 확인한다.")
+    @Transactional
+    public void 로그인_성공_권한필요페이지_접속확인() throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        // given
+        User savedUser = User.builder()
+                .name("harry")
+                .email("harrypmw1@dev.com")
+                .password("1234")
+                .build();
+        Session session = savedUser.addSession();
+
+        userRepository.save(savedUser);
+
+        LoginRequest login = LoginRequest.builder()
+                .email("harrypmw1@dev.com")
+                .password("1234")
+                .build();
+
+        String json = objectMapper.writeValueAsString(login);
+
+        // when
+
+        // then
+        mockMvc.perform(get("/foo")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", session.getAccessToken())
+                        .content(json)
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
+
+    }
+
+    @Test
+    @DisplayName("로그인 후 검증되지 않은 세션 값으로 권한이 필요한 페이지에 접속이 불가한지 확인한다.")
+    @Transactional
+    public void 로그인_성공_권한필요페이지_접속불가확인() throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        // given
+        User savedUser = User.builder()
+                .name("harry")
+                .email("harrypmw1@dev.com")
+                .password("1234")
+                .build();
+        Session session = savedUser.addSession();
+
+        userRepository.save(savedUser);
+
+        LoginRequest login = LoginRequest.builder()
+                .email("harrypmw1@dev.com")
+                .password("1234")
+                .build();
+
+        String json = objectMapper.writeValueAsString(login);
+
+        // when
+
+        // then
+        mockMvc.perform(get("/foo")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header("Authorization", session.getAccessToken() + "-o")
+                        .content(json)
+                )
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+
     }
 }
