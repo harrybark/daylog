@@ -1,6 +1,5 @@
 package com.daylog.controller;
 
-import com.daylog.domain.Session;
 import com.daylog.domain.User;
 import com.daylog.handler.aop.ValidationAdvice;
 import com.daylog.repository.SessionRepository;
@@ -23,11 +22,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.http.Cookie;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -83,7 +82,7 @@ class AuthControllerTest {
         // when
 
         // then
-        mockMvc.perform(post("/auth/login")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                 )
@@ -117,7 +116,7 @@ class AuthControllerTest {
         // when
 
         // then
-        mockMvc.perform(post("/auth/login")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                 )
@@ -154,7 +153,7 @@ class AuthControllerTest {
         // when
 
         // then
-        mockMvc.perform(post("/auth/login")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                 )
@@ -168,9 +167,9 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("로그인 후 권한이 필요한 페이지에 접속되는지 확인한다.")
+    @DisplayName("쿠키로 인증이 정상적으로 수행된 후 세션이 응답되는지 확인한다.")
     @Transactional
-    public void 로그인_성공_권한필요페이지_접속확인() throws Exception {
+    public void 쿠키로_인증_세션생성_응답() throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper();
         // given
@@ -179,7 +178,6 @@ class AuthControllerTest {
                 .email("harrypmw1@dev.com")
                 .password("1234")
                 .build();
-        Session session = savedUser.addSession();
 
         userRepository.save(savedUser);
 
@@ -193,49 +191,18 @@ class AuthControllerTest {
         // when
 
         // then
-        mockMvc.perform(get("/foo")
+        Cookie cookie = new Cookie("SESSION", "07f5fe16-4c23-4915-a67e-a97dde1cf868");
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header("Authorization", session.getAccessToken())
+                        .cookie(cookie)
                         .content(json)
                 )
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
                 .andDo(print());
 
-    }
+        User findUser = userRepository.findById(savedUser.getId()).orElseThrow(RuntimeException::new);
 
-    @Test
-    @DisplayName("로그인 후 검증되지 않은 세션 값으로 권한이 필요한 페이지에 접속이 불가한지 확인한다.")
-    @Transactional
-    public void 로그인_성공_권한필요페이지_접속불가확인() throws Exception {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        // given
-        User savedUser = User.builder()
-                .name("harry")
-                .email("harrypmw1@dev.com")
-                .password("1234")
-                .build();
-        Session session = savedUser.addSession();
-
-        userRepository.save(savedUser);
-
-        LoginRequest login = LoginRequest.builder()
-                .email("harrypmw1@dev.com")
-                .password("1234")
-                .build();
-
-        String json = objectMapper.writeValueAsString(login);
-
-        // when
-
-        // then
-        mockMvc.perform(get("/foo")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .header("Authorization", session.getAccessToken() + "-o")
-                        .content(json)
-                )
-                .andExpect(status().isUnauthorized())
-                .andDo(print());
-
+        assertEquals(1, findUser.getSessions().size());
     }
 }
