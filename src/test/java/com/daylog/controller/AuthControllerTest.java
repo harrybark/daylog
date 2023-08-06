@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.http.Cookie;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
@@ -154,6 +155,46 @@ class AuthControllerTest {
         // then
         mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", notNullValue()))
+                .andDo(print());
+
+        User findUser = userRepository.findById(savedUser.getId()).orElseThrow(RuntimeException::new);
+
+        assertEquals(1, findUser.getSessions().size());
+    }
+
+    @Test
+    @DisplayName("쿠키로 인증이 정상적으로 수행된 후 세션이 응답되는지 확인한다.")
+    @Transactional
+    public void 쿠키로_인증_세션생성_응답() throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        // given
+        User savedUser = User.builder()
+                .name("harry")
+                .email("harrypmw1@dev.com")
+                .password("1234")
+                .build();
+
+        userRepository.save(savedUser);
+
+        LoginRequest login = LoginRequest.builder()
+                .email("harrypmw1@dev.com")
+                .password("1234")
+                .build();
+
+        String json = objectMapper.writeValueAsString(login);
+
+        // when
+
+        // then
+        Cookie cookie = new Cookie("SESSION", "07f5fe16-4c23-4915-a67e-a97dde1cf868");
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .cookie(cookie)
                         .content(json)
                 )
                 .andExpect(status().isOk())
