@@ -23,6 +23,14 @@ spring:
       #  physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
     defer-datasource-initialization: true
+  sql:
+    init-model: always
+  data:
+    web:
+      pageable:
+        max-page-size: 2000
+        default-page-size: 20
+        one-indexed-parameters: true
 
   servlet:
     multipart:
