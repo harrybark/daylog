@@ -1,13 +1,5 @@
-### 테스트 요청
+### 인증페이지 요청
 
-#GET http://localhost:8080/foo
-#Content-Type: application/json
-#Authorization: asdf
-
-POST http://localhost:8080/auth/login
+GET http://localhost:8080/foo
 Content-Type: application/json
-
-{
-  "email" : "harypmw1@dev.com",
-  "password" : "1234"
-}
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.ue7lk5LJnljzaqE_d1z_J8YmhM2tZboac5S113p0uB8

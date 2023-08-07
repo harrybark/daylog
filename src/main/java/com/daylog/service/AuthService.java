@@ -17,11 +17,11 @@ public class AuthService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = false)
-    public String signIn(LoginRequest loginRequest) {
+    public Long signIn(LoginRequest loginRequest) {
         User user = userRepository.findUserByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword())
                 .orElseThrow(CustomInvalidRequestException::new);
 
         Session session = user.addSession();
-        return session.getAccessToken();
+        return user.getId();
     }
 }
