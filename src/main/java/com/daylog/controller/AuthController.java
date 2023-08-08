@@ -1,6 +1,7 @@
 package com.daylog.controller;
 
 import com.daylog.common.CMRespDto;
+import com.daylog.config.AppConfig;
 import com.daylog.request.LoginRequest;
 import com.daylog.response.SessionResponse;
 import com.daylog.service.AuthService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Base64;
+import java.util.Date;
 
 @Slf4j
 @RestController
@@ -24,6 +26,7 @@ import java.util.Base64;
 public class AuthController {
 
     private final AuthService authService;
+    private final AppConfig appConfig;
 
     private final String KEY = "v8up323RprJyfvrYvGCHYZG5jq3vgFg7tkhaJoQhY6U=";
     @PostMapping("/auth/login")
@@ -32,11 +35,12 @@ public class AuthController {
         Long userId = authService.signIn(loginRequest);
 
         Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-        SecretKey secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(KEY));
+        SecretKey secretKey = Keys.hmacShaKeyFor(appConfig.getJwtKey());
 
         String jws = Jwts.builder()
                 .setSubject(String.valueOf(userId))
                 .signWith(secretKey)
+                .setIssuedAt(new Date())
                 .compact();
 
         /*
