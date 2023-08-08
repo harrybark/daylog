@@ -44,3 +44,6 @@ spring:
 
 file:
   path: /Users/harry/Desktop/workspace/upload/
+
+daylog:
+  jwt-key: v8up323RprJyfvrYvGCHYZG5jq3vgFg7tkhaJoQhY6U

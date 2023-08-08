@@ -1,6 +1,7 @@
 package com.daylog.config;
 
 import com.daylog.handler.ex.CustomUnAuthorizedException;
+import com.daylog.repository.SessionRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -22,6 +23,9 @@ import static org.apache.tomcat.util.codec.binary.Base64.*;
 public class AuthResolver implements HandlerMethodArgumentResolver {
 
     private final String KEY = "v8up323RprJyfvrYvGCHYZG5jq3vgFg7tkhaJoQhY6U=";
+
+    private final SessionRepository sessionRepository;
+    private final AppConfig appConfig;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -63,7 +67,7 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
         try {
 
             Jws<Claims> claimsJws = Jwts.parserBuilder()
-                    .setSigningKey(decodeBase64(KEY))
+                    .setSigningKey(appConfig.getJwtKey())
                     .build()
                     .parseClaimsJws(jws);
 
