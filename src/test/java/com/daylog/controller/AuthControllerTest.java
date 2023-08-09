@@ -5,6 +5,8 @@ import com.daylog.handler.aop.ValidationAdvice;
 import com.daylog.repository.SessionRepository;
 import com.daylog.repository.UserRepository;
 import com.daylog.request.LoginRequest;
+import com.daylog.request.SignupRequest;
+import com.daylog.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +29,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,6 +49,7 @@ class AuthControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private SessionRepository sessionRepository;
 
@@ -82,7 +86,7 @@ class AuthControllerTest {
         // when
 
         // then
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+        mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                 )
@@ -116,7 +120,7 @@ class AuthControllerTest {
         // when
 
         // then
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+        mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                 )
@@ -153,7 +157,7 @@ class AuthControllerTest {
         // when
 
         // then
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+        mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(json)
                 )
@@ -192,7 +196,7 @@ class AuthControllerTest {
 
         // then
         Cookie cookie = new Cookie("SESSION", "07f5fe16-4c23-4915-a67e-a97dde1cf868");
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+        mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .cookie(cookie)
                         .content(json)
@@ -204,5 +208,29 @@ class AuthControllerTest {
         User findUser = userRepository.findById(savedUser.getId()).orElseThrow(RuntimeException::new);
 
         assertEquals(1, findUser.getSessions().size());
+    }
+
+    @Test
+    @DisplayName(value = "회원가입이 성공적으로 수행된다.")
+    public void 회원가입_정상수행_테스트() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        // given
+        SignupRequest signupRequest = SignupRequest.builder()
+                .name("Harry Park")
+                .password("1234")
+                .email("harrypmw@dev.com")
+                .build();
+
+        String json = objectMapper.writeValueAsString(signupRequest);
+
+        // when
+
+        // then
+        mockMvc.perform(post("/auth/signup")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json)
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 }

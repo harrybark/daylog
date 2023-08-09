@@ -4,14 +4,14 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class CustomPostNotFoundException extends CustomCommonException {
+public class CustomAlreadyExistsEmailException extends CustomCommonException {
 
     // 객체를 구분할 때
     private static final long serialVersionUID = 1L;
 
-    private static final String MESSAGE = "Post Not Found";
+    private static final String MESSAGE = "Email already exists";
 
-    public CustomPostNotFoundException() {
+    public CustomAlreadyExistsEmailException() {
         super(MESSAGE);
     }
 

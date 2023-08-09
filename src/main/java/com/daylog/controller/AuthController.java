@@ -3,6 +3,7 @@ package com.daylog.controller;
 import com.daylog.common.CMRespDto;
 import com.daylog.config.AppConfig;
 import com.daylog.request.LoginRequest;
+import com.daylog.request.SignupRequest;
 import com.daylog.response.SessionResponse;
 import com.daylog.service.AuthService;
 import io.jsonwebtoken.Jwts;
@@ -43,21 +44,19 @@ public class AuthController {
                 .setIssuedAt(new Date())
                 .compact();
 
-        /*
-        ResponseCookie responseCookie = ResponseCookie.from("SESSION", accessToken)
-                .domain("localhost") // todo 서버 환경에 따른 분리 필요!
-                .path("/")
-                .httpOnly(true)
-                .secure(false)
-                .maxAge(Duration.ofDays(30))
-                .sameSite("Strict")
-                .build();
-        */
-
         return ResponseEntity.ok()
                 //.header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(new CMRespDto<>(1, "success", new SessionResponse(jws)))
                 ;
 
+    }
+
+    @PostMapping("/auth/signup")
+    public ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest) {
+        authService.signup(signupRequest);
+        return ResponseEntity.ok()
+                //.header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(new CMRespDto<>(1, "success", null))
+                ;
     }
 }
