@@ -41,7 +41,7 @@ public class PostService {
 
         public PostResponse get(Long id) {
 
-                Post post = postRepository.findById(id).orElseThrow(() -> new CustomPostNotFoundException("Post Not Found"));
+                Post post = postRepository.findById(id).orElseThrow(() -> new CustomPostNotFoundException());
                 PostResponse postResponse = PostResponse.builder()
                         .id(post.getId())
                         .title(post.getTitle())
@@ -61,7 +61,7 @@ public class PostService {
 
         @Transactional
         public PostResponse edit(Long id, PostEdit postEdit) {
-                Post post = postRepository.findById(id).orElseThrow(() -> new CustomPostNotFoundException("Post Not Found"));
+                Post post = postRepository.findById(id).orElseThrow(() -> new CustomPostNotFoundException());
 
                 PostEditor.PostEditorBuilder postEditorBuilder = post.toEditor();
                 PostEditor postEditor = postEditorBuilder
@@ -76,7 +76,7 @@ public class PostService {
 
         @Transactional
         public void delete(Long postId) {
-                Post post = postRepository.findById(postId).orElseThrow(() -> new CustomPostNotFoundException("Post Not Found"));
+                Post post = postRepository.findById(postId).orElseThrow(() -> new CustomPostNotFoundException());
                 postRepository.delete(post);
 
         }
