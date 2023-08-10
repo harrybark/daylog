@@ -8,6 +8,8 @@ import com.daylog.repository.UserRepository;
 import com.daylog.request.LoginRequest;
 import com.daylog.request.SignupRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +22,11 @@ public class AuthService {
 
     @Transactional(readOnly = false)
     public Long signIn(LoginRequest loginRequest) {
+        
         User user = userRepository.findUserByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword())
                 .orElseThrow(CustomInvalidRequestException::new);
 
-        Session session = user.addSession();
+        //Session session = user.addSession();
         return user.getId();
     }
 
@@ -35,6 +38,18 @@ public class AuthService {
         if ( isPresent ) {
             throw new CustomAlreadyExistsEmailException();
         }
+
+        SCryptPasswordEncoder passwordEncoder =
+                new SCryptPasswordEncoder(
+                        16,
+                        8,
+                        1,
+                        32,
+                        64);
+
+        String encryptPassword = passwordEncoder.encode(signupRequest.getPassword());
+        signupRequest.setPassword(encryptPassword);
+
         User savedUser = userRepository.save(signupRequest.toEntity());
 
         return savedUser.getId();

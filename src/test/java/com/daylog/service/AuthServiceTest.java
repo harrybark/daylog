@@ -44,6 +44,8 @@ class AuthServiceTest {
 
         // then
         assertEquals(1, userRepository.count());
+        User user = userRepository.findAll().iterator().next();
+
     }
 
     @Test
