@@ -54,3 +54,10 @@
 - [x] : 테스트 주도 개발에 대한 활용 및 이해
 
 ### 3. 관련 정보(학습내용 정리)
+- 해시
+- 해시 방식(Salt 없음)
+  1. SHA1
+  2. SHA256
+  3. MD5
+- BCrypt, SCrypt, Argon2
+- salt value
