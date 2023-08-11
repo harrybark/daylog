@@ -21,8 +21,8 @@
 
 > <p>Backend Stack</p>
 
-- [x] : Java 11
-- [x] : SpringBoot 2.7.8
+- [x] : Java 11 -> 17
+- [x] : SpringBoot 2.7.8 -> 3.0.5
 - [x] : SpringSecurity
 - [x] : SpringData(JPA, QueryDSL)
 - [x] : Lombok
