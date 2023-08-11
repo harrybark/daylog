@@ -1,11 +1,10 @@
 package com.daylog.controller;
 
 import com.daylog.common.CMRespDto;
-import com.daylog.config.UserSession;
-import com.daylog.response.PostResponse;
 import com.daylog.request.PostCreate;
 import com.daylog.request.PostEdit;
 import com.daylog.request.PostSearch;
+import com.daylog.response.PostResponse;
 import com.daylog.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +26,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/foo")
-    public String foo(UserSession userSession) {
+    public String foo() {
         return "foo";
     }
 
