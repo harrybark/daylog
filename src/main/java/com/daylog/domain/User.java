@@ -1,11 +1,9 @@
 package com.daylog.domain;
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,20 +23,9 @@ public class User {
 
     private LocalDateTime createdAt;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Session> sessions = new ArrayList<>();
-
     @PrePersist
     public void createTime() {
         this.createdAt = LocalDateTime.now();
-    }
-
-    public Session addSession() {
-        Session session = Session.builder()
-                .user(this)
-                .build();
-        sessions.add(session);
-        return session;
     }
 
     @Builder

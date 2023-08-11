@@ -1,12 +1,11 @@
 package com.daylog.request;
 
 import com.daylog.handler.ex.CustomInvalidRequestException;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import javax.validation.constraints.NotBlank;
 
 @Data
 @ToString

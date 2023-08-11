@@ -1,9 +1,9 @@
 package com.daylog.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.validation.constraints.NotBlank;
 
 @Getter
 public class PostEdit {
