@@ -1,7 +1,10 @@
 
 server:
   port: 8080
-
+  servlet:
+    session:
+      cookie:
+        max-age: 172800
 spring:
   h2:
     console:
@@ -31,6 +34,8 @@ spring:
         max-page-size: 2000
         default-page-size: 20
         one-indexed-parameters: true
+  session:
+    timeout: 86400
 
   servlet:
     multipart:

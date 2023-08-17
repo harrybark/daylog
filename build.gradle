@@ -40,7 +40,8 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-test'
-
+    // 스프링 시큐리티 세션
+    implementation 'org.springframework.session:spring-session-jdbc'
 
     implementation 'com.querydsl:querydsl-core:5.0.0'
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'

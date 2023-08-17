@@ -1,5 +1,9 @@
 package com.daylog.config;
 
+import com.daylog.domain.User;
+import com.daylog.handler.ex.CustomCommonException;
+import com.daylog.handler.ex.CustomInvalidRequestException;
+import com.daylog.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,9 +11,9 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -48,6 +52,9 @@ public class SecurityConfig {
                     .passwordParameter("password")
                     .defaultSuccessUrl("/")
                 .and()
+                .rememberMe(rm -> rm.rememberMeParameter("remember")
+                        .alwaysRemember(false)
+                        .tokenValiditySeconds(259200))
                 .userDetailsService(userDetailsService())
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
@@ -55,12 +62,20 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager =new InMemoryUserDetailsManager();
-        UserDetails userDetails = User.withUsername("daylog").password("1234").roles("ADMIN").build();
-        manager.createUser(userDetails);
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+//        InMemoryUserDetailsManager manager =new InMemoryUserDetailsManager();
+//        UserDetails userDetails = User.withUsername("daylog").password("1234").roles("ADMIN").build();
+//        manager.createUser(userDetails);
+//
+//        return manager;
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                User user = userRepository.findByEmail(username).orElseThrow(CustomInvalidRequestException::new);
 
-        return manager;
+                return null;
+            }
+        }
     }
 
     @Bean
